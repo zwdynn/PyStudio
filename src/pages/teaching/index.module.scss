@@ -1,0 +1,624 @@
+/* 食品科学与工程学院闯关 —— 暖金色主题 */
+
+.page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fdf8ec 0%, #f6eedc 100%);
+}
+
+/* ===== 开幕：浅色背景 + 中央打字机文字 ===== */
+.intro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40rpx;
+}
+
+.introLine {
+  width: 100%;
+  text-align: center;
+}
+
+.introText {
+  font-size: 44rpx;
+  font-weight: 700;
+  line-height: 1.8;
+  letter-spacing: 2rpx;
+  color: #c05621;
+}
+
+.introCursor {
+  font-size: 44rpx;
+  color: #c05621;
+  animation: cursorBlink 0.6s steps(1) infinite;
+}
+
+.introHint {
+  margin-top: 60rpx;
+  font-size: 26rpx;
+  color: #c88a4a;
+  letter-spacing: 2rpx;
+  animation: hintBlink 1.6s ease-in-out infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes hintBlink {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ===== 通关结尾 ===== */
+.ending {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 48rpx;
+  background: linear-gradient(180deg, #fff6e0 0%, #ffe9c2 100%);
+}
+
+.endingLine {
+  width: 100%;
+  text-align: center;
+}
+
+.endingText {
+  font-size: 40rpx;
+  font-weight: 700;
+  line-height: 1.8;
+  letter-spacing: 2rpx;
+  color: #c05621;
+}
+
+.endingCursor {
+  font-size: 40rpx;
+  color: #c05621;
+  animation: cursorBlink 0.6s steps(1) infinite;
+}
+
+.endingActions {
+  margin-top: 80rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+  justify-content: center;
+  align-items: center;
+}
+
+.endingExit {
+  padding: 20rpx 60rpx;
+  border-radius: 999rpx;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  background: linear-gradient(135deg, #f7c873 0%, #f2b04a 100%);
+  box-shadow: 0 10rpx 24rpx rgba(242, 176, 74, 0.4);
+  animation: chapterFade 0.5s ease-out both;
+}
+
+/* ===== 章节标题 ===== */
+.chapter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 48rpx;
+  box-sizing: border-box;
+  background: linear-gradient(160deg, #fff8e8 0%, #ffeed0 100%);
+}
+
+.chapterText {
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1.8;
+  letter-spacing: 3rpx;
+  text-align: center;
+  color: #c05621;
+  animation: chapterFade 1s ease-out both;
+}
+
+.chapterHint {
+  margin-top: 72rpx;
+  font-size: 26rpx;
+  color: #c88a4a;
+  letter-spacing: 2rpx;
+  animation: hintBlink 1.6s ease-in-out infinite;
+}
+
+@keyframes chapterFade {
+  from { opacity: 0; transform: translateY(24rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapterTextRoll {
+  animation: chapterRollIn 1.4s ease-out both;
+}
+
+@keyframes chapterRollIn {
+  0% { opacity: 0; transform: translate(-170%, -30rpx) rotate(-720deg); }
+  12% { opacity: 1; }
+  45% { transform: translate(12%, 24rpx) rotate(36deg); }
+  68% { transform: translate(-6%, -20rpx) rotate(-16deg); }
+  85% { transform: translate(3%, 10rpx) rotate(8deg); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+
+/* ===== 金色相框 ===== */
+.frame {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  right: 16rpx;
+  bottom: 16rpx;
+  padding: 14rpx;
+  border-radius: 36rpx;
+  background: linear-gradient(135deg, #f7c873 0%, #f2b04a 100%);
+  box-shadow: 0 18rpx 44rpx rgba(242, 176, 74, 0.32);
+  box-sizing: border-box;
+}
+
+.frameInner {
+  position: absolute;
+  top: 14rpx;
+  left: 14rpx;
+  right: 14rpx;
+  bottom: 14rpx;
+  border-radius: 26rpx;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 2rpx rgba(242, 176, 74, 0.35);
+}
+
+/* 剧情画面 */
+.sceneImg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scenePlaceholder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #fff6e0 0%, #ffe9c2 100%);
+}
+
+.sceneEmoji {
+  font-size: 130rpx;
+  line-height: 1;
+}
+
+.sceneTitle {
+  margin-top: 24rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #c98a2b;
+  letter-spacing: 4rpx;
+}
+
+.sceneSub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #b08a55;
+}
+
+/* ===== 半透明橙黄遮罩 ===== */
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 181, 77, 0.52);
+  z-index: 5;
+}
+
+.overlayIcon {
+  width: 300rpx;
+  filter: drop-shadow(0 10rpx 24rpx rgba(120, 72, 8, 0.28));
+  animation: overlayIconIn 0.6s ease-out both;
+}
+
+.overlayIconLarge {
+  width: 640rpx;
+  animation: overlayIconGrow 0.7s ease-out both;
+}
+
+@keyframes overlayIconGrow {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes overlayIconIn {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== 解读框 ===== */
+.qaExplainBox {
+  margin-bottom: 44rpx;
+  padding: 24rpx 30rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #fff3d6 0%, #ffe6b8 100%);
+  border: 3rpx solid rgba(242, 176, 74, 0.6);
+  box-shadow: 0 10rpx 24rpx rgba(90, 74, 43, 0.16);
+  animation: explainSlideDown 0.5s ease-out both;
+}
+
+.qaExplainTitle {
+  font-size: 26rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: #c05621;
+  margin-bottom: 10rpx;
+}
+
+.qaExplainText {
+  display: block;
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: #6b4a1e;
+}
+
+.qaExplainNext {
+  margin-top: 14rpx;
+  text-align: right;
+  font-size: 26rpx;
+  color: #f2b04a;
+  animation: nextBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes explainSlideDown {
+  from { transform: translateY(-100vh); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== 提示框（知识彩蛋） ===== */
+.hintBox {
+  padding: 34rpx 36rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #fff3d6 0%, #ffe6b8 100%);
+  border: 3rpx solid rgba(242, 176, 74, 0.6);
+  box-shadow: 0 10rpx 24rpx rgba(90, 74, 43, 0.16);
+  animation: explainSlideDown 0.5s ease-out both;
+}
+
+.hintTitle {
+  font-size: 28rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: #c05621;
+  margin-bottom: 14rpx;
+}
+
+.hintText {
+  display: block;
+  font-size: 30rpx;
+  line-height: 1.7;
+  color: #6b4a1e;
+}
+
+.hintNext {
+  margin-top: 16rpx;
+  text-align: right;
+  font-size: 26rpx;
+  color: #f2b04a;
+  animation: nextBounce 1.6s ease-in-out infinite;
+}
+
+/* ===== 对话框区域 ===== */
+.dialogZone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 44rpx 24rpx 24rpx;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.dialogZoneCenter {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.dialog {
+  position: relative;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 32rpx;
+  padding: 60rpx 36rpx 36rpx;
+  box-shadow: 0 10rpx 28rpx rgba(90, 74, 43, 0.18);
+}
+
+.speaker {
+  position: absolute;
+  top: -34rpx;
+  left: 36rpx;
+  padding: 14rpx 38rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #f7c873 0%, #f2b04a 100%);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  box-shadow: 0 6rpx 16rpx rgba(242, 176, 74, 0.35);
+}
+
+.qaSpeaker {
+  background: linear-gradient(135deg, #4fb5fd 0%, #3b8ee8 100%);
+  box-shadow: 0 6rpx 16rpx rgba(59, 142, 232, 0.35);
+}
+
+.dialogBody {
+  position: relative;
+  min-height: 120rpx;
+}
+
+.qaBody {
+  min-height: 0;
+  margin-bottom: 28rpx;
+}
+
+.dialogText {
+  display: block;
+  padding-right: 64rpx;
+  font-size: 34rpx;
+  line-height: 1.7;
+  color: #4a3a1e;
+}
+
+.qaBody .dialogText {
+  padding-right: 0;
+}
+
+.dialogCursor {
+  color: #4a3a1e;
+  animation: cursorBlink 0.6s steps(1) infinite;
+}
+
+.dialogNext {
+  position: absolute;
+  right: 4rpx;
+  bottom: 4rpx;
+  font-size: 34rpx;
+  color: #f2b04a;
+  animation: nextBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes nextBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(6rpx); opacity: 1; }
+}
+
+/* ===== 选项区 ===== */
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.option {
+  width: calc(50% - 12rpx);
+  margin-bottom: 24rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 26rpx 22rpx;
+  background: #fffdf7;
+  border: 3rpx solid rgba(242, 176, 74, 0.55);
+  border-radius: 22rpx;
+  box-shadow: 0 6rpx 16rpx rgba(90, 74, 43, 0.06);
+}
+
+.option:active {
+  background: #fff3d6;
+  border-color: #f2b04a;
+  transform: scale(0.97);
+}
+
+.optionLetter {
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f7c873 0%, #f2b04a 100%);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionText {
+  font-size: 29rpx;
+  color: #5a4a2b;
+  line-height: 1.4;
+}
+
+.optionCorrect {
+  border-color: #34c759;
+  background: #e8f9ee;
+}
+
+.optionCorrect .optionLetter {
+  background: linear-gradient(135deg, #5fd88a 0%, #34c759 100%);
+}
+
+.optionWrong {
+  border-color: #ff5f57;
+  background: #ffeceb;
+}
+
+.optionWrong .optionLetter {
+  background: linear-gradient(135deg, #ff8a80 0%, #ff5f57 100%);
+}
+
+.optionDim {
+  opacity: 0.45;
+}
+
+/* ===== 排序互动 ===== */
+.sortPage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36rpx 20rpx 40rpx;
+  box-sizing: border-box;
+  background: #f6efe0;
+}
+
+.sortTitle {
+  font-size: 56rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: #b4531f;
+}
+
+.sortSubtitle {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #b08a55;
+  letter-spacing: 1rpx;
+}
+
+.sortBoard {
+  position: relative;
+  width: 710rpx;
+  margin-top: 24rpx;
+}
+
+.sortBoardImg {
+  width: 100%;
+  display: block;
+}
+
+.sortArrow {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.sortPiece {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: sortPieceIn 0.4s ease-out both;
+}
+
+.sortPieceIcon {
+  width: 110rpx;
+  filter: drop-shadow(0 6rpx 14rpx rgba(120, 72, 8, 0.22));
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.sortPieceName {
+  width: 100%;
+  margin-top: 8rpx;
+  filter: drop-shadow(0 6rpx 14rpx rgba(120, 72, 8, 0.18));
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.sortPieceActive .sortPieceIcon,
+.sortPieceActive .sortPieceName {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 16rpx rgba(255, 176, 60, 0.95));
+}
+
+.sortPieceLocked .sortPieceIcon,
+.sortPieceLocked .sortPieceName {
+  filter: drop-shadow(0 0 12rpx rgba(52, 199, 89, 0.65));
+}
+
+@keyframes sortPieceIn {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sortSuccess {
+  margin-top: 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: sortSuccessIn 0.5s ease-out both;
+}
+
+.sortSuccessText {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #2e8b57;
+  letter-spacing: 2rpx;
+}
+
+.sortContinue {
+  margin-top: 20rpx;
+  padding: 18rpx 72rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #f7c873 0%, #f2b04a 100%);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  box-shadow: 0 10rpx 24rpx rgba(242, 176, 74, 0.4);
+  animation: sortContinueBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes sortContinueBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6rpx); }
+}
+
+@keyframes sortSuccessIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.sortFootHint {
+  margin-top: 28rpx;
+  font-size: 24rpx;
+  color: #c0a070;
+  letter-spacing: 1rpx;
+}

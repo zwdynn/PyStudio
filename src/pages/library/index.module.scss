@@ -1,0 +1,1406 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/theme.scss' as *;
+
+// ==========================================
+// 页面基础
+// ==========================================
+
+.page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b69 50%, #1a0a2e 100%);
+}
+
+// ==========================================
+// 进度条
+// ==========================================
+
+.progressBarTop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 80rpx $page-padding 16rpx;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  
+  .progressTrack {
+    flex: 1;
+    height: 8rpx;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: $radius-round;
+    overflow: hidden;
+    
+    .progressFill {
+      height: 100%;
+      background: linear-gradient(90deg, #C4B5FD, #8B5CF6);
+      border-radius: $radius-round;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12rpx rgba(139, 92, 246, 0.6);
+    }
+  }
+  
+  .progressLabel {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+  }
+}
+
+// ==========================================
+// Act 标题展示
+// ==========================================
+
+.actTitleScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  background: linear-gradient(180deg, rgba(26, 10, 46, 0.95), rgba(45, 27, 105, 0.9));
+  animation: actTitleFadeIn 0.8s ease forwards;
+  
+  .actTitleMain {
+    font-size: 56rpx;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    text-shadow: 0 0 30rpx rgba(139, 92, 246, 0.8), 0 0 60rpx rgba(139, 92, 246, 0.4);
+    margin-bottom: $spacing-md;
+    animation: actTitleGlow 2s ease-in-out infinite;
+    opacity: 0;
+    transform: translateY(30rpx);
+    animation: actTitleAppear 0.8s ease 0.3s forwards, actTitleGlow 2s ease-in-out 1.1s infinite;
+  }
+  
+  .actTitleSub {
+    font-size: $font-size-lg;
+    color: rgba(255, 255, 255, 0.7);
+    opacity: 0;
+    animation: actTitleAppear 0.8s ease 0.8s forwards;
+  }
+  
+  .actTitleDecor {
+    margin-top: $spacing-xl;
+    display: flex;
+    gap: $spacing-md;
+    
+    .actTitleStar {
+      font-size: 32rpx;
+      color: #A78BFA;
+      opacity: 0;
+      animation: starPopIn 0.5s ease forwards;
+      
+      &:nth-child(1) { animation-delay: 1.2s; }
+      &:nth-child(2) { animation-delay: 1.4s; }
+      &:nth-child(3) { animation-delay: 1.6s; }
+      &:nth-child(4) { animation-delay: 1.4s; }
+      &:nth-child(5) { animation-delay: 1.2s; }
+    }
+  }
+}
+
+@keyframes actTitleFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes actTitleAppear {
+  from { opacity: 0; transform: translateY(30rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes actTitleGlow {
+  0%, 100% { text-shadow: 0 0 20rpx rgba(139, 92, 246, 0.5), 0 0 40rpx rgba(139, 92, 246, 0.2); }
+  50% { text-shadow: 0 0 30rpx rgba(139, 92, 246, 0.8), 0 0 60rpx rgba(139, 92, 246, 0.4); }
+}
+
+@keyframes starPopIn {
+  0% { opacity: 0; transform: scale(0) rotate(-180deg); }
+  60% { transform: scale(1.3) rotate(10deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+// ==========================================
+// 场景背景
+// ==========================================
+
+.sceneBg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+// --- 夜间场景 ---
+.scene_night {
+  background: linear-gradient(180deg, #0f0c29 0%, #1a0a2e 40%, #2d1b69 70%, #4a2c8a 100%);
+}
+
+// --- 图书馆场景 ---
+.scene_library {
+  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b69 30%, #4a2c8a 60%, #6d4fa8 100%);
+}
+
+// --- 迷宫场景 ---
+.scene_maze {
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 30%, #2d1b69 70%, #1a0a2e 100%);
+}
+
+// --- 火焰场景 ---
+.scene_fire {
+  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b69 40%, #4a2c8a 70%, #6d4fa8 100%);
+}
+
+// --- 星空 ---
+.starrySky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: starTwinkle 3s ease-in-out infinite;
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+// --- 月亮 ---
+.moonContainer {
+  position: absolute;
+  top: 80rpx;
+  right: 80rpx;
+  
+  .moon {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    box-shadow: 0 0 40rpx rgba(253, 230, 138, 0.3);
+    animation: moonFloat 6s ease-in-out infinite;
+  }
+  
+  .moonGlow {
+    position: absolute;
+    top: -20rpx;
+    left: -20rpx;
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50%;
+    background: rgba(253, 230, 138, 0.1);
+    animation: moonGlow 3s ease-in-out infinite;
+  }
+}
+
+@keyframes moonFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15rpx); }
+}
+
+@keyframes moonGlow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+// --- 漂浮书本 ---
+.floatingBooks {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  right: 0;
+  height: 200rpx;
+  
+  .floatingBook {
+    position: absolute;
+    animation: bookFloat 4s ease-in-out infinite;
+    opacity: 0.6;
+  }
+}
+
+@keyframes bookFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+  25% { transform: translateY(-20rpx) rotate(5deg); opacity: 0.6; }
+  50% { transform: translateY(-10rpx) rotate(-3deg); opacity: 0.5; }
+  75% { transform: translateY(-25rpx) rotate(8deg); opacity: 0.7; }
+}
+
+// --- 门 ---
+.doorContainer {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  .door {
+    .doorEmoji {
+      font-size: 120rpx;
+      animation: doorGlow 3s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes doorGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+// --- 书架背景 ---
+.shelvesBg {
+  position: absolute;
+  bottom: 20%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  
+  .shelfBg {
+    width: 120rpx;
+    background: rgba(139, 92, 246, 0.15);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10rpx;
+    animation: shelfAppear 0.5s ease backwards;
+    
+    .shelfEmoji {
+      font-size: 48rpx;
+    }
+  }
+}
+
+@keyframes shelfAppear {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+// --- 闪光粒子 ---
+.sparkleField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  .sparkleParticle {
+    position: absolute;
+    font-size: 24rpx;
+    animation: sparkleFloat 2s ease-in-out infinite;
+  }
+}
+
+@keyframes sparkleFloat {
+  0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+  50% { opacity: 1; transform: translateY(-30rpx) scale(1); }
+}
+
+// --- 迷宫装饰 ---
+.mazeDecor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  .mazeWallDecor {
+    position: absolute;
+    width: 80rpx;
+    height: 8rpx;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+    animation: mazeLinePulse 3s ease-in-out infinite;
+  }
+}
+
+@keyframes mazeLinePulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+// --- 发光球 ---
+.glowField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  .glowOrb {
+    position: absolute;
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 50%;
+    background: rgba(167, 139, 250, 0.1);
+    animation: orbFloat 4s ease-in-out infinite;
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20rpx, -30rpx) scale(1.2); }
+  50% { transform: translate(-10rpx, -50rpx) scale(0.9); }
+  75% { transform: translate(30rpx, -20rpx) scale(1.1); }
+}
+
+// --- 尘埃粒子 ---
+.dustField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  .dustParticle {
+    position: absolute;
+    width: 4rpx;
+    height: 4rpx;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: dustDrift 4s linear infinite;
+  }
+}
+
+@keyframes dustDrift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.3; }
+  100% { transform: translateY(-200rpx) translateX(50rpx); opacity: 0; }
+}
+
+// --- 火焰 ---
+.flameField {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  .flameBase {
+    width: 120rpx;
+    height: 40rpx;
+    background: linear-gradient(135deg, #FCD34D, #F59E0B);
+    border-radius: 50%;
+    filter: blur(10rpx);
+    animation: flameBasePulse 1s ease-in-out infinite;
+  }
+  
+  .flameInner {
+    position: absolute;
+    bottom: 20rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60rpx;
+    height: 80rpx;
+    background: linear-gradient(180deg, #FEF3C7, #F59E0B);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flameFlicker 0.5s ease-in-out infinite;
+  }
+  
+  .flameGlow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.2), transparent);
+    animation: flameGlowPulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes flameBasePulse {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.1); }
+}
+
+@keyframes flameFlicker {
+  0%, 100% { transform: translateX(-50%) scaleY(1); opacity: 0.8; }
+  25% { transform: translateX(-50%) scaleY(1.1); opacity: 1; }
+  75% { transform: translateX(-50%) scaleY(0.9); opacity: 0.6; }
+}
+
+@keyframes flameGlowPulse {
+  0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.6; transform: translateX(-50%) scale(1.2); }
+}
+
+// --- 光柱 ---
+.lightBeams {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  
+  .lightBeam {
+    position: absolute;
+    top: 0;
+    width: 2rpx;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, rgba(167, 139, 250, 0.3), transparent);
+    animation: beamSweep 4s ease-in-out infinite;
+  }
+}
+
+@keyframes beamSweep {
+  0%, 100% { opacity: 0; transform: scaleY(0.5); }
+  25% { opacity: 0.5; transform: scaleY(1); }
+  75% { opacity: 0.3; transform: scaleY(0.8); }
+}
+
+// --- 飘浮粒子 ---
+.particleField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  
+  .particleFloat {
+    position: absolute;
+    color: rgba(167, 139, 250, 0.5);
+    animation: particleRise 3s ease-in-out infinite;
+  }
+}
+
+@keyframes particleRise {
+  0% { transform: translateY(100%) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.4; }
+  100% { transform: translateY(-100%) rotate(360deg); opacity: 0; }
+}
+
+// ==========================================
+// 场景切换动画
+// ==========================================
+
+.sceneTransition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  
+  .transitionCurtain {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1a0a2e 0%, #2d1b69 50%, #1a0a2e 100%);
+    animation: curtainClose 0.8s ease forwards;
+  }
+}
+
+@keyframes curtainClose {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+// ==========================================
+// 角色系统
+// ==========================================
+
+.charactersStage {
+  position: fixed;
+  bottom: 320rpx;
+  left: 0;
+  right: 0;
+  height: 400rpx;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 $page-padding;
+}
+
+.charContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  
+  &.charLeft {
+    animation: charSlideInLeft 0.6s ease backwards;
+  }
+  
+  &.charRight {
+    animation: charSlideInRight 0.6s ease backwards;
+  }
+  
+  &.charTalking {
+    .charSprite {
+      animation: charBounce 0.5s ease infinite;
+    }
+    
+    .charGlow {
+      opacity: 1 !important;
+      animation: charGlowPulse 0.5s ease infinite;
+    }
+  }
+}
+
+@keyframes charSlideInLeft {
+  from { opacity: 0; transform: translateX(-100rpx); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes charSlideInRight {
+  from { opacity: 0; transform: translateX(100rpx); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes charBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10rpx); }
+}
+
+.charSprite {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  transition: all 0.3s ease;
+  
+  .charEmoji {
+    font-size: 80rpx;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .charGlow {
+    position: absolute;
+    top: -10rpx;
+    left: -10rpx;
+    right: -10rpx;
+    bottom: -10rpx;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .charSparkles {
+    position: absolute;
+    top: -20rpx;
+    right: -20rpx;
+    display: flex;
+    gap: 4rpx;
+    
+    .charSparkle {
+      font-size: 16rpx;
+      color: #A78BFA;
+      animation: sparkleRotate 2s linear infinite;
+    }
+  }
+}
+
+@keyframes sparkleRotate {
+  0% { opacity: 0; transform: rotate(0deg) scale(0); }
+  50% { opacity: 1; transform: rotate(180deg) scale(1); }
+  100% { opacity: 0; transform: rotate(360deg) scale(0); }
+}
+
+@keyframes charGlowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+// 书灵角色
+.charBookSpirit {
+  background: linear-gradient(135deg, #7C3AED, #5B21B6);
+  box-shadow: 0 0 30rpx rgba(124, 58, 237, 0.4);
+  
+  .charGlow {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
+  }
+}
+
+// 玩家角色
+.charPlayer {
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  box-shadow: 0 0 30rpx rgba(99, 102, 241, 0.3);
+  
+  .charGlow {
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent);
+  }
+}
+
+// 角色名字
+.charName {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: $spacing-sm;
+  font-weight: $font-weight-medium;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.5);
+}
+
+// 角色表情变体
+.expressionMysterious {
+  .charEmoji { animation: mysteriousGlow 2s ease-in-out infinite; }
+}
+
+.expressionHappy, .expressionHappyP {
+  .charEmoji { animation: happyBounce 1s ease-in-out infinite; }
+}
+
+.expressionExcited {
+  .charEmoji { animation: excitedShake 0.3s ease-in-out infinite; }
+}
+
+.expressionProud {
+  .charEmoji { transform: rotate(10deg); }
+}
+
+.expressionCurious {
+  .charEmoji { animation: curiousTilt 2s ease-in-out infinite; }
+}
+
+.expressionDetermined {
+  .charEmoji { transform: scale(1.1); }
+}
+
+.expressionConfused {
+  .charEmoji { animation: confusedTilt 0.5s ease-in-out infinite; }
+}
+
+@keyframes mysteriousGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+@keyframes happyBounce {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(5deg); }
+}
+
+@keyframes excitedShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5rpx); }
+  75% { transform: translateX(5rpx); }
+}
+
+@keyframes curiousTilt {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+}
+
+@keyframes confusedTilt {
+  0%, 100% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+// ==========================================
+// 对话区
+// ==========================================
+
+.dialogueArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: $spacing-md $page-padding 60rpx;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0.85) 100%);
+  
+  .dialogueBox {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20rpx);
+    -webkit-backdrop-filter: blur(20rpx);
+    border-radius: $radius-xl;
+    border: 1rpx solid rgba(255, 255, 255, 0.1);
+    padding: $spacing-lg;
+    animation: dialogueSlideUp 0.4s ease;
+    
+    .dialogueSpeaker {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: #A78BFA;
+      margin-bottom: $spacing-sm;
+      display: block;
+    }
+  }
+}
+
+@keyframes dialogueSlideUp {
+  from { opacity: 0; transform: translateY(100rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ==========================================
+// 打字机效果
+// ==========================================
+
+.typewriter {
+  position: relative;
+  min-height: 100rpx;
+  
+  .typewriterText {
+    font-size: $font-size-lg;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: $line-height-loose;
+    display: inline;
+  }
+  
+  .typewriterCursor {
+    display: inline;
+    font-size: $font-size-lg;
+    color: #A78BFA;
+    animation: cursorBlink 0.7s ease infinite;
+    margin-left: 4rpx;
+  }
+  
+  .typewriterHint {
+    display: block;
+    font-size: $font-size-sm;
+    color: rgba(167, 139, 250, 0.6);
+    text-align: right;
+    margin-top: $spacing-sm;
+    animation: hintPulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+// ==========================================
+// 游戏区
+// ==========================================
+
+.gameArea {
+  position: fixed;
+  top: 120rpx;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $page-padding;
+  animation: gameFadeIn 0.5s ease;
+}
+
+@keyframes gameFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.gamePanel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border-radius: $radius-xl;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  padding: $spacing-lg;
+  width: 100%;
+  animation: panelSlideIn 0.5s ease;
+  
+  &.gameComplete {
+    animation: panelComplete 0.5s ease forwards;
+  }
+}
+
+@keyframes panelSlideIn {
+  from { opacity: 0; transform: translateY(50rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes panelComplete {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); box-shadow: 0 0 40rpx rgba(139, 92, 246, 0.3); }
+}
+
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  
+  .gameTitle {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    text-shadow: 0 2rpx 10rpx rgba(139, 92, 246, 0.5);
+  }
+  
+  .gameHint {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .gameProgress {
+    background: rgba(0, 0, 0, 0.3);
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-round;
+    
+    .progressNum {
+      color: #A78BFA;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-lg;
+    }
+    
+    .progressSep {
+      color: rgba(255, 255, 255, 0.4);
+      margin: 0 4rpx;
+    }
+    
+    .progressTotal {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: $font-size-md;
+    }
+  }
+}
+
+// ==========================================
+// 开始挑战按钮
+// ==========================================
+
+.clickStart {
+  text-align: center;
+  padding: $spacing-xl;
+  
+  .clickIcon {
+    margin-bottom: $spacing-lg;
+    
+    .clickEmoji {
+      font-size: 120rpx;
+      animation: bookFloat 3s ease-in-out infinite;
+    }
+  }
+  
+  .clickTitle {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    margin-bottom: $spacing-md;
+  }
+  
+  .clickDesc {
+    font-size: $font-size-md;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: $spacing-xl;
+    line-height: $line-height-loose;
+  }
+  
+  .clickBtn {
+    display: inline-block;
+    padding: $spacing-md $spacing-xl;
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+    border-radius: $radius-button;
+    box-shadow: 0 4rpx 20rpx rgba(139, 92, 246, 0.4);
+    animation: btnGlow 2s ease-in-out infinite;
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    .clickBtnText {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: #fff;
+    }
+  }
+}
+
+@keyframes btnGlow {
+  0%, 100% { box-shadow: 0 4rpx 20rpx rgba(139, 92, 246, 0.4); }
+  50% { box-shadow: 0 4rpx 30rpx rgba(139, 92, 246, 0.6); }
+}
+
+// ==========================================
+// 书籍分类游戏
+// ==========================================
+
+.shelvesRow {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+  
+  .sortShelf {
+    flex: 1;
+    padding: $spacing-md;
+    border-radius: $radius-lg;
+    text-align: center;
+    min-height: 120rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    &.shelfColor_red {
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.15));
+      border: 1rpx solid rgba(239, 68, 68, 0.4);
+    }
+    
+    &.shelfColor_blue {
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.15));
+      border: 1rpx solid rgba(59, 130, 246, 0.4);
+    }
+    
+    &.shelfColor_green {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.15));
+      border: 1rpx solid rgba(16, 185, 129, 0.4);
+    }
+    
+    &.shelfShake {
+      animation: shake 0.5s ease;
+    }
+    
+    .sortShelfIcon {
+      font-size: 40rpx;
+      margin-bottom: 4rpx;
+    }
+    
+    .sortShelfLabel {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10rpx); }
+  40% { transform: translateX(10rpx); }
+  60% { transform: translateX(-10rpx); }
+  80% { transform: translateX(10rpx); }
+}
+
+.booksRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  
+  .sortBook {
+    width: 90rpx;
+    height: 110rpx;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:active {
+      transform: scale(0.9);
+    }
+    
+    &.bookColor_red {
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      box-shadow: 0 4rpx 12rpx rgba(239, 68, 68, 0.3);
+    }
+    
+    &.bookColor_blue {
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+    }
+    
+    &.bookColor_green {
+      background: linear-gradient(135deg, #10B981, #059669);
+      box-shadow: 0 4rpx 12rpx rgba(16, 185, 129, 0.3);
+    }
+    
+    &.bookSelectedAnim {
+      transform: scale(1.15) translateY(-10rpx);
+      box-shadow: 0 0 30rpx rgba(139, 92, 246, 0.6);
+    }
+    
+    &.bookPlacedAnim {
+      animation: bookFlyAway 0.5s ease forwards;
+    }
+    
+    .sortBookIcon {
+      font-size: 40rpx;
+    }
+  }
+}
+
+@keyframes bookFlyAway {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2) translateY(-20rpx); opacity: 0.5; }
+  100% { transform: scale(0) translateY(-40rpx); opacity: 0; }
+}
+
+.selectedHint {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  animation: hintBounce 1s ease-in-out infinite;
+  
+  .hintIcon {
+    font-size: 32rpx;
+  }
+  
+  .hintText {
+    font-size: $font-size-sm;
+    color: rgba(167, 139, 250, 0.8);
+  }
+}
+
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5rpx); }
+}
+
+// ==========================================
+// 迷宫游戏
+// ==========================================
+
+.mazeDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  
+  .mazeRow {
+    display: flex;
+  }
+  
+  .mazeCell {
+    width: 72rpx;
+    height: 72rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &.mazeWall {
+      background: rgba(45, 27, 105, 0.6);
+      border: 1rpx solid rgba(139, 92, 246, 0.2);
+    }
+    
+    &.mazePath {
+      background: rgba(139, 92, 246, 0.05);
+      border: 1rpx solid rgba(139, 92, 246, 0.05);
+    }
+    
+    &.mazePlayer {
+      background: rgba(139, 92, 246, 0.2);
+      animation: mazePlayerPulse 0.8s ease-in-out infinite;
+    }
+    
+    &.mazeTarget {
+      background: rgba(239, 68, 68, 0.15);
+      animation: mazeTargetGlow 1s ease-in-out infinite;
+    }
+    
+    .mazePlayerIcon {
+      font-size: 40rpx;
+    }
+    
+    .mazeTargetIcon {
+      font-size: 36rpx;
+      animation: targetPulse 0.5s ease-in-out infinite;
+    }
+    
+    .mazeFoundIcon {
+      font-size: 40rpx;
+      animation: foundSpin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes mazePlayerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes mazeTargetGlow {
+  0%, 100% { box-shadow: inset 0 0 10rpx rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: inset 0 0 20rpx rgba(239, 68, 68, 0.6); }
+}
+
+@keyframes targetPulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.2); filter: brightness(1.5); }
+}
+
+@keyframes foundSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.mazeControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  
+  .mazeCtrlRow {
+    display: flex;
+    gap: 8rpx;
+  }
+  
+  .mazeBtn {
+    width: 80rpx;
+    height: 80rpx;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(139, 92, 246, 0.2));
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36rpx;
+    color: #fff;
+    border: 1rpx solid rgba(139, 92, 246, 0.3);
+    transition: all 0.15s ease;
+    
+    &:active {
+      transform: scale(0.85);
+      background: rgba(139, 92, 246, 0.6);
+    }
+    
+    &.mazeBtnCenter {
+      background: transparent;
+      border: none;
+      font-size: 20rpx;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+// ==========================================
+// 收集游戏
+// ==========================================
+
+.collectField {
+  position: relative;
+  height: 350rpx;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1), transparent);
+  
+  .collectCenter {
+    position: absolute;
+    bottom: 20rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    .collectFlame {
+      text-align: center;
+      transition: all 0.5s ease;
+      
+      .flameEmoji {
+        font-size: 64rpx;
+        transition: all 0.5s ease;
+      }
+      
+      &.flameStage1 {
+        .flameEmoji { font-size: 80rpx; }
+        animation: flameGrow 0.5s ease;
+      }
+      
+      &.flameStage2 {
+        .flameEmoji { font-size: 100rpx; }
+      }
+      
+      &.flameStage3 {
+        .flameEmoji {
+          font-size: 120rpx;
+          animation: flameDance 0.3s ease-in-out infinite;
+        }
+      }
+    }
+  }
+  
+  .shard {
+    position: absolute;
+    width: 60rpx;
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:active {
+      transform: scale(1.3);
+    }
+    
+    &.shardCollected {
+      animation: shardCollect 0.5s ease forwards;
+    }
+    
+    .shardIcon {
+      font-size: 36rpx;
+      animation: shardFloat 2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes shardFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15rpx) rotate(15deg); }
+}
+
+@keyframes shardCollect {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes flameGrow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes flameDance {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  50% { transform: scale(1.1) rotate(3deg); }
+}
+
+// ==========================================
+// 庆祝动画
+// ==========================================
+
+.celebrationOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 300;
+  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b69 40%, #8B5CF6 70%, #A78BFA 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  .celebrationRibbon {
+    position: absolute;
+    top: -30rpx;
+    width: 12rpx;
+    height: 60rpx;
+    border-radius: 6rpx;
+    animation: ribbonFall 3s linear infinite;
+  }
+  
+  .celebrationEmoji {
+    position: absolute;
+    bottom: -50rpx;
+    animation: emojiRise 3s ease-in-out infinite;
+  }
+}
+
+@keyframes ribbonFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes emojiRise {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  30% { opacity: 1; transform: translateY(-200rpx) scale(1); }
+  60% { opacity: 0.8; transform: translateY(-400rpx) scale(1.1); }
+  100% { transform: translateY(-600rpx) scale(0.5); opacity: 0; }
+}
+
+.celebrationCenter {
+  text-align: center;
+  z-index: 301;
+  animation: celebCenterIn 1s ease 0.5s both;
+  
+  .celebrationIconWrap {
+    margin-bottom: $spacing-xl;
+    
+    .celebMainIcon {
+      font-size: 160rpx;
+      animation: mainIconDance 1s ease-in-out infinite;
+    }
+  }
+  
+  .celebTitle {
+    display: block;
+    font-size: 52rpx;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    margin-bottom: $spacing-sm;
+    text-shadow: 0 0 30rpx rgba(251, 191, 36, 0.6);
+  }
+  
+  .celebSubtitle {
+    display: block;
+    font-size: $font-size-xl;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: $spacing-lg;
+  }
+  
+  .celebDesc {
+    display: block;
+    font-size: $font-size-md;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: $line-height-loose;
+  }
+  
+  .celebButton {
+    display: inline-block;
+    margin-top: $spacing-xl;
+    padding: $spacing-md $spacing-xl;
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
+    border-radius: $radius-button;
+    box-shadow: 0 4rpx 30rpx rgba(251, 191, 36, 0.5);
+    animation: celebBtnGlow 2s ease-in-out infinite;
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    .celebButtonText {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: #fff;
+    }
+  }
+}
+
+@keyframes celebCenterIn {
+  from { opacity: 0; transform: scale(0.5) translateY(50rpx); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes mainIconDance {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-20rpx) rotate(-10deg); }
+  75% { transform: translateY(-20rpx) rotate(10deg); }
+}
+
+@keyframes celebBtnGlow {
+  0%, 100% { box-shadow: 0 4rpx 20rpx rgba(251, 191, 36, 0.4); }
+  50% { box-shadow: 0 4rpx 40rpx rgba(251, 191, 36, 0.7); }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "PyStudio",
+  "version": "2.0.0",
+  "description": "校园探索之旅 微信云开发统一后端网关",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

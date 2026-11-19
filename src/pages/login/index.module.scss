@@ -1,0 +1,342 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// ============ BACKGROUND ============
+.bgImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+}
+
+// ============ TOP TITLE ============
+.topOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 140rpx;
+  padding-bottom: 40rpx;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  animation: titleFade 0.8s ease-out;
+}
+
+@keyframes titleFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.schoolName {
+  font-size: 56rpx;
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: 10rpx;
+  text-shadow:
+    0 4rpx 16rpx rgba(0, 0, 0, 0.4),
+    0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.appSubtitle {
+  font-size: 30rpx;
+  color: #FFFFFF;
+  margin-top: 14rpx;
+  letter-spacing: 6rpx;
+  text-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.35);
+  opacity: 0.95;
+}
+
+// ============ BOTTOM ACTION AREA ============
+.bottomArea {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40rpx 48rpx 60rpx;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: bottomSlideUp 0.8s ease-out;
+}
+
+@keyframes bottomSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btnRow {
+  display: flex;
+  gap: 32rpx;
+  width: 100%;
+  justify-content: center;
+}
+
+.actionBtn {
+  flex: 1;
+  max-width: 300rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.btnGreen {
+  background: linear-gradient(135deg, #B2E076, #7DAB3F);
+  box-shadow:
+    0 10rpx 30rpx rgba(100, 150, 50, 0.4),
+    inset 0 2rpx 6rpx rgba(255, 255, 255, 0.4),
+    inset 0 -2rpx 4rpx rgba(0, 0, 0, 0.12);
+}
+
+.btnOrange {
+  background: linear-gradient(135deg, #FFC882, #F5A135);
+  box-shadow:
+    0 10rpx 30rpx rgba(220, 140, 30, 0.4),
+    inset 0 2rpx 6rpx rgba(255, 255, 255, 0.4),
+    inset 0 -2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.actionBtnIcon {
+  font-size: 34rpx;
+}
+
+.actionBtnText {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 2rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
+}
+
+.homeIndicator {
+  width: 200rpx;
+  height: 10rpx;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 5rpx;
+  margin-top: 40rpx;
+}
+
+// ============ LOGIN OVERLAY ============
+.loginOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.loginSheet {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 48rpx 48rpx 0 0;
+  padding: 48rpx 48rpx 60rpx;
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+  animation: sheetSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 -20rpx 60rpx rgba(0, 0, 0, 0.25);
+}
+
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheetTitle {
+  display: block;
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.sheetSubtitle {
+  display: block;
+  text-align: center;
+  font-size: 26rpx;
+  color: #6b7280;
+  margin-top: 12rpx;
+  margin-bottom: 40rpx;
+}
+
+.featureRow {
+  display: flex;
+  justify-content: center;
+  gap: 24rpx;
+  margin-bottom: 48rpx;
+}
+
+.featureChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 20rpx 24rpx;
+  background: #F9FAFB;
+  border-radius: 20rpx;
+  border: 2rpx solid #F3F4F6;
+}
+
+.featureEmoji {
+  font-size: 40rpx;
+}
+
+.featureLabel {
+  font-size: 22rpx;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.primaryBtn {
+  width: 100% !important;
+  height: 96rpx;
+  background: linear-gradient(135deg, #10B981, #059669) !important;
+  border-radius: 48rpx !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  box-shadow: 0 8rpx 28rpx rgba(16, 185, 129, 0.35);
+
+  &::after { border: none; }
+
+  &:active { transform: scale(0.97); }
+
+  &[disabled] { opacity: 0.5; }
+}
+
+.primaryBtnIcon {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+
+.primaryBtnText {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2rpx;
+}
+
+.sheetSkip {
+  text-align: center;
+  margin-top: 24rpx;
+  padding: 16rpx;
+}
+
+.sheetSkipText {
+  font-size: 26rpx;
+  color: #9ca3af;
+}
+
+.agreement {
+  display: block;
+  text-align: center;
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-top: 16rpx;
+}
+
+// ============ AVATAR ============
+.avatarWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 36rpx;
+}
+
+.avatarBtn {
+  width: 160rpx !important;
+  height: 160rpx;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: #F3F4F6 !important;
+  border: 4rpx dashed #d1d5db !important;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: normal;
+
+  &::after { border: none; }
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatarPh {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.avatarPhIcon {
+  font-size: 44rpx;
+}
+
+.avatarPhText {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+.nickInput {
+  width: 100%;
+  height: 88rpx;
+  background: #F3F4F6;
+  border-radius: 24rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+  color: #1f2937;
+  border: 2rpx solid transparent;
+  margin-bottom: 36rpx;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: #10B981;
+    background: #fff;
+  }
+}

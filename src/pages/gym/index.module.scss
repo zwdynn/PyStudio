@@ -1,0 +1,372 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  padding-bottom: 100rpx;
+}
+
+.actHeader {
+  padding: $spacing-xl $page-padding;
+  text-align: center;
+  
+  .actTitle {
+    display: block;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .actSubtitle {
+    display: block;
+    font-size: $font-size-md;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: $spacing-lg;
+  }
+  
+  .progressBar {
+    height: 12rpx;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: $radius-round;
+    overflow: hidden;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .progressFill {
+    height: 100%;
+    background: #fff;
+    border-radius: $radius-round;
+    transition: width $transition-slow;
+  }
+  
+  .progressText {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.contentArea {
+  padding: $spacing-lg $page-padding;
+}
+
+.dialogBox {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-popup;
+  
+  .speaker {
+    display: block;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: #6366F1;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .dialogText {
+    display: block;
+    font-size: $font-size-lg;
+    color: $color-text-primary;
+    line-height: $line-height-loose;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .nextBtn {
+    text-align: right;
+    padding: $spacing-sm $spacing-md;
+    background: #6366F1;
+    border-radius: $radius-button;
+    display: inline-block;
+    float: right;
+    
+    .nextText {
+      font-size: $font-size-md;
+      font-weight: $font-weight-medium;
+      color: #fff;
+    }
+  }
+}
+
+.clickStartGame {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-popup;
+  
+  .gameTask {
+    display: block;
+    font-size: $font-size-lg;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .startButton {
+    padding: $spacing-md $spacing-xl;
+    background: #6366F1;
+    border-radius: $radius-button;
+    display: inline-block;
+    
+    .startText {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: #fff;
+    }
+  }
+}
+
+.quizGame {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-popup;
+  
+  .gameTitle {
+    display: block;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    text-align: center;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .question {
+    display: block;
+    font-size: $font-size-lg;
+    color: $color-text-primary;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .optionsList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .option {
+    padding: $spacing-lg;
+    background: #F3F4F6;
+    border-radius: $radius-lg;
+    text-align: center;
+    transition: all $transition-fast;
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    &.correct {
+      background: #D1FAE5;
+      border: 2rpx solid #10B981;
+    }
+    
+    &.wrong {
+      background: #FEE2E2;
+      border: 2rpx solid #EF4444;
+    }
+  }
+  
+  .optionText {
+    font-size: 48rpx;
+  }
+  
+  .resultSuccess {
+    display: block;
+    text-align: center;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #10B981;
+  }
+  
+  .resultFail {
+    display: block;
+    text-align: center;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #EF4444;
+  }
+}
+
+.clickerGame {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-popup;
+  text-align: center;
+  
+  .gameTitle {
+    display: block;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .gameSubtitle {
+    display: block;
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .clickerStats {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    
+    .statItem {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: #6366F1;
+    }
+  }
+  
+  .clickArea {
+    height: 300rpx;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    border-radius: $radius-xl;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $transition-fast;
+    
+    &:active {
+      transform: scale(0.95);
+      opacity: 0.9;
+    }
+  }
+  
+  .clickHint {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+  }
+}
+
+.finishGame {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-popup;
+  
+  .finishTitle {
+    display: block;
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #F59E0B;
+    margin-bottom: $spacing-md;
+  }
+  
+  .finishText {
+    display: block;
+    font-size: $font-size-lg;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .finishButton {
+    padding: $spacing-md $spacing-xl;
+    background: #F59E0B;
+    border-radius: $radius-button;
+    display: inline-block;
+    
+    .finishTextBtn {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: #fff;
+    }
+  }
+}
+
+.rewardBox {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-popup;
+  
+  .rewardIcon {
+    display: block;
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+    animation: bounce 0.5s ease;
+  }
+  
+  .rewardTitle {
+    display: block;
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #10B981;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .rewardText {
+    display: block;
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .nextButton {
+    padding: $spacing-md $spacing-xl;
+    background: #6366F1;
+    border-radius: $radius-button;
+    display: inline-block;
+    
+    .nextBtnText {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: #fff;
+    }
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.failBox {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: $shadow-popup;
+  
+  .failIcon {
+    display: block;
+    font-size: 100rpx;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .failTitle {
+    display: block;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #EF4444;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .failText {
+    display: block;
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .retryButton {
+    padding: $spacing-md $spacing-xl;
+    background: #EF4444;
+    border-radius: $radius-button;
+    display: inline-block;
+    
+    .retryText {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: #fff;
+    }
+  }
+}

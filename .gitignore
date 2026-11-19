@@ -1,0 +1,28 @@
+# 依赖与构建产物
+node_modules/
+dist/
+.swc/
+.pai/
+
+# 小程序本地配置（含个人设置，不入库）
+project.private.config.json
+
+# 图片原图备份（体积大，压缩后的图在 src/assets）
+_assets_originals/
+
+# 模板遗留的根级 assets（未被引用，实际使用的是 src/assets）
+/assets/
+
+# 旧版云函数备份 / 早期示例工程
+_backup_旧版云函数/
+11/
+1/
+Demo/
+lib/
+server/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.log
+build*.log

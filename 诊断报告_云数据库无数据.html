@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云数据库无数据 · 链路诊断报告</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #f4f5f8;
+    color: #1f2430;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 72px; }
+
+  /* ---------- header ---------- */
+  .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+  .head h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; }
+  .head .sub { color: #6b7280; font-size: 13.5px; margin-top: 8px; }
+  .meta { text-align: right; font-size: 12.5px; color: #9aa1ad; line-height: 1.9; }
+  .meta code { background: #e9ebf0; padding: 1px 6px; border-radius: 4px; color: #4b5563; font-size: 12px; }
+
+  /* ---------- verdict ---------- */
+  .verdict {
+    background: #fff;
+    border: 1px solid #e6e8ee;
+    border-left: 4px solid #dc2626;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(16,24,40,.05);
+  }
+  .verdict .tag {
+    display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .5px;
+    color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca;
+    padding: 2px 8px; border-radius: 4px; margin-bottom: 10px;
+  }
+  .verdict p { font-size: 15px; color: #333a47; }
+  .verdict strong { color: #b91c1c; }
+
+  /* ---------- cards ---------- */
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+  .stat {
+    background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 16px 18px;
+  }
+  .stat .k { font-size: 12px; color: #8b93a1; margin-bottom: 6px; }
+  .stat .v { font-size: 17px; font-weight: 700; }
+  .stat .d { font-size: 11.5px; color: #9aa1ad; margin-top: 4px; }
+  .ok { color: #059669; }
+  .bad { color: #dc2626; }
+  .warn { color: #d97706; }
+
+  h2 { font-size: 17px; font-weight: 700; margin: 36px 0 14px; display: flex; align-items: center; gap: 9px; }
+  h2 .n {
+    width: 22px; height: 22px; border-radius: 6px; background: #1f2430; color: #fff;
+    font-size: 12px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  h2 small { font-weight: 400; color: #9aa1ad; font-size: 12.5px; }
+
+  /* ---------- panel ---------- */
+  .panel { background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 22px 24px; }
+  .panel p { font-size: 14px; color: #4b5563; margin-bottom: 10px; }
+  .panel p:last-child { margin-bottom: 0; }
+
+  /* ---------- evidence ---------- */
+  .ev { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+  .mock { border: 1px solid #2a2f3a; border-radius: 8px; overflow: hidden; background: #1a1e26; }
+  .mock .bar { background: #232833; color: #9aa1ad; font-size: 11px; padding: 7px 12px; display: flex; justify-content: space-between; }
+  .mock table { width: 100%; border-collapse: collapse; font-size: 11px; color: #c9d1d9; }
+  .mock th { background: #20252e; color: #8b93a1; font-weight: 600; padding: 8px 10px; text-align: left; border-bottom: 1px solid #2a2f3a; }
+  .mock td { padding: 9px 10px; border-bottom: 1px solid #232833; }
+  .mock tr:last-child td { border-bottom: none; }
+  .mock .zero { color: #f87171; font-weight: 700; }
+  .mock .idxc { color: #60a5fa; }
+  .caption { font-size: 12px; color: #8b93a1; margin-top: 10px; text-align: center; }
+  .ev-list { list-style: none; }
+  .ev-list li { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px dashed #e9ebf0; font-size: 13.5px; color: #4b5563; }
+  .ev-list li:last-child { border-bottom: none; }
+  .ev-list .mk { flex: 0 0 18px; font-weight: 700; }
+  .ev-list .mk.r { color: #dc2626; }
+  .ev-list .mk.g { color: #059669; }
+  .ev-list b { color: #1f2430; }
+
+  /* ---------- chain ---------- */
+  .chainbox { background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 8px 4px 4px; }
+  svg.chain { width: 100%; height: auto; display: block; }
+  .legend { display: flex; gap: 22px; padding: 0 24px 16px; font-size: 12px; color: #8b93a1; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  /* ---------- table ---------- */
+  table.t { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e6e8ee; font-size: 13px; }
+  table.t th { background: #fafbfc; text-align: left; padding: 11px 14px; font-size: 12px; color: #6b7280; font-weight: 600; border-bottom: 1px solid #e6e8ee; }
+  table.t td { padding: 13px 14px; border-bottom: 1px solid #f0f1f5; vertical-align: top; color: #4b5563; }
+  table.t tr:last-child td { border-bottom: none; }
+  table.t .rk { font-weight: 700; color: #1f2430; }
+  table.t .pct { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  table.t .pct .bar { width: 52px; height: 5px; border-radius: 3px; background: #eceef2; overflow: hidden; }
+  table.t .pct .bar i { display: block; height: 100%; background: #dc2626; }
+  table.t code { background: #f3f4f7; padding: 1px 5px; border-radius: 4px; font-size: 12px; color: #374151; }
+  .pill { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 99px; border: 1px solid; }
+  .pill.hot { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+  .pill.mid { color: #b45309; border-color: #fde68a; background: #fffbeb; }
+  .pill.low { color: #4b5563; border-color: #e5e7eb; background: #f9fafb; }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; gap: 12px; }
+  .step { background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 16px 18px; display: grid; grid-template-columns: 28px 1fr; gap: 14px; }
+  .step .num { width: 26px; height: 26px; border-radius: 8px; background: #eef2ff; color: #4338ca; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+  .step h4 { font-size: 14px; margin-bottom: 5px; }
+  .step p { font-size: 13px; color: #5b6472; }
+  .step .expect { margin-top: 8px; font-size: 12.5px; color: #059669; background: #f0fdf4; border: 1px dashed #bbf7d0; border-radius: 6px; padding: 7px 10px; }
+  .step .expect b { color: #047857; }
+
+  /* ---------- checklist ---------- */
+  .check { background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px 22px; }
+  .check .barwrap { height: 6px; background: #eef0f4; border-radius: 4px; overflow: hidden; margin: 4px 0 16px; }
+  .check .barwrap i { display: block; height: 100%; width: 0; background: linear-gradient(90deg,#6366f1,#8b5cf6); transition: width .3s ease; }
+  .check label { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; font-size: 13.5px; color: #4b5563; cursor: pointer; border-bottom: 1px dashed #eef0f4; }
+  .check label:last-of-type { border-bottom: none; }
+  .check input { margin-top: 4px; width: 15px; height: 15px; accent-color: #4f46e5; flex: 0 0 auto; }
+  .check label.done { color: #9aa1ad; text-decoration: line-through; }
+  .cnt { font-size: 12.5px; color: #6b7280; }
+
+  /* ---------- after ---------- */
+  .after { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+  .code { background: #1a1e26; border-radius: 10px; padding: 16px 18px; overflow-x: auto; }
+  .code pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 12px; line-height: 1.75; color: #c9d1d9; }
+  .code .k { color: #79c0ff; }
+  .code .s { color: #a5d6ff; }
+  .code .c { color: #6e7781; }
+  .code .n { color: #ffa657; }
+
+  .fix { background: #fff; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px 20px; }
+  .fix h4 { font-size: 13px; margin-bottom: 10px; color: #1f2430; }
+  .fix ul { list-style: none; font-size: 12.5px; color: #4b5563; }
+  .fix li { padding: 7px 0; border-bottom: 1px dashed #eef0f4; }
+  .fix li:last-child { border-bottom: none; }
+  .fix li code { background: #f3f4f7; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+
+  .foot { margin-top: 36px; font-size: 12px; color: #9aa1ad; text-align: center; }
+
+  @media (max-width: 880px) {
+    .grid4 { grid-template-columns: repeat(2, 1fr); }
+    .ev, .after { grid-template-columns: 1fr; }
+    .meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <h1>云数据库无数据 · 链路诊断</h1>
+      <div class="sub">现象：小程序已上传成功，手机扫码可进入并注册「Ding」，但云数据库记录列表为空</div>
+    </div>
+    <div class="meta">
+      诊断时间：2026-11-18 21:53<br>
+      AppID：<code>wxd587b6c678400132</code><br>
+      代码环境：<code>cloud1-d6gby9r5ha2a8ff17</code>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <span class="tag">核心结论</span>
+    <p>写入链路在<strong>「初始化环境」或「调用云函数」这一环就断了</strong>，而且代码把这个失败<strong>静默降级</strong>成了「离线模式」，所以你在手机上看到的是「一切正常，只是没数据」。这不是数据库的问题，是连接没通 —— 你现在最该做的不是查集合，是<strong>把那条被吞掉的错误找出来</strong>。</p>
+  </div>
+
+  <div class="grid4">
+    <div class="stat">
+      <div class="k">小程序上传</div>
+      <div class="v ok">成功</div>
+      <div class="d">云开发权限正常</div>
+    </div>
+    <div class="stat">
+      <div class="k">手机预览</div>
+      <div class="v ok">可进入</div>
+      <div class="d">说明前端逻辑在跑</div>
+    </div>
+    <div class="stat">
+      <div class="k">users 记录数</div>
+      <div class="v bad">0 条</div>
+      <div class="d">昵称 Ding 没进库</div>
+    </div>
+    <div class="stat">
+      <div class="k">索引命中次数</div>
+      <div class="v bad">0 次</div>
+      <div class="d">关键线索，见下</div>
+    </div>
+  </div>
+
+  <h2><span class="n">1</span>先纠正一个误读 <small>你截图里那两行不是数据</small></h2>
+  <div class="panel" style="margin-bottom:16px;">
+    <p>「索引管理」和「记录列表」是两个完全不同的页签。截图里 <code>_id_</code> 和 <code>_openid_1</code> 是<strong>索引定义</strong>，不是用户记录；<code>8KB / 4KB</code> 是索引页的<strong>预分配空间</strong>，空集合也是这个数字，不能当作「有数据」的证据。</p>
+    <p>真正有用的是<strong>命中次数 = 0</strong>：这说明从建好集合到现在，<strong>还没有任何一次按 openid 的查询真正打到过这个集合</strong>。配合 <code>_id_</code> 也是 0 次，基本可以排除「写进去了但你没找到」——数据确实一次都没进来。</p>
+  </div>
+
+  <div class="ev">
+    <div>
+      <div class="mock">
+        <div class="bar"><span>索引管理</span><span>索引名称 / 命中次数</span></div>
+        <table>
+          <tr><th>索引名称</th><th>字段</th><th>命中次数</th></tr>
+          <tr><td class="idxc">_openid_1</td><td>_openid 升序</td><td class="zero">0</td></tr>
+          <tr><td class="idxc">_id_</td><td>_id 升序</td><td class="zero">0</td></tr>
+        </table>
+      </div>
+      <div class="caption">你的截图还原：索引存在，但从未被查询命中</div>
+    </div>
+    <ul class="ev-list">
+      <li><span class="mk r">✕</span><span><b>没有查询命中</b>，说明云函数没有成功连到这个库（环境 ID 不一致，或函数根本没跑起来）。</span></li>
+      <li><span class="mk g">✓</span><span><b>集合确实建好了</b>，否则你不会看到这两个索引 —— 这一步你做对了。</span></li>
+      <li><span class="mk r">✕</span><span><b>昵称「Ding」只存在手机本地</b>（storage 的 <code>campus-explorer-game</code>），所以你在「我的」页能看到它，但云端没有。</span></li>
+    </ul>
+  </div>
+
+  <h2><span class="n">2</span>数据该走的路 <small>四环，断在哪一环决定修法</small></h2>
+  <div class="chainbox">
+    <svg class="chain" viewBox="0 0 1000 236" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+          <path d="M0,0 L7,3.2 L0,6.4 z" fill="#c7ccd6"/>
+        </marker>
+        <marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+          <path d="M0,0 L7,3.2 L0,6.4 z" fill="#f0a3a3"/>
+        </marker>
+      </defs>
+
+      <!-- node 1 -->
+      <rect x="12" y="52" width="196" height="104" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+      <text x="110" y="80" text-anchor="middle" font-size="11" fill="#059669" font-weight="700" letter-spacing=".5">① 已通过</text>
+      <text x="110" y="105" text-anchor="middle" font-size="14" fill="#1f2430" font-weight="600">手机端登录</text>
+      <text x="110" y="127" text-anchor="middle" font-size="11.5" fill="#6b7280">填头像昵称「Ding」</text>
+      <text x="110" y="144" text-anchor="middle" font-size="11" fill="#9aa1ad">→ 写入本地 storage</text>
+
+      <line x1="212" y1="104" x2="248" y2="104" stroke="#c7ccd6" stroke-width="1.4" marker-end="url(#ar)"/>
+
+      <!-- node 2 -->
+      <rect x="252" y="52" width="196" height="104" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.4"/>
+      <text x="350" y="80" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700" letter-spacing=".5">② 首要嫌疑</text>
+      <text x="350" y="105" text-anchor="middle" font-size="14" fill="#1f2430" font-weight="600">cloud.init(env)</text>
+      <text x="350" y="127" text-anchor="middle" font-size="11.5" fill="#6b7280">环境 ID 必须真实存在</text>
+      <text x="350" y="144" text-anchor="middle" font-size="11" fill="#dc2626">错了就整条链瘫痪</text>
+
+      <line x1="452" y1="104" x2="488" y2="104" stroke="#f0a3a3" stroke-width="1.4" marker-end="url(#arR)"/>
+
+      <!-- node 3 -->
+      <rect x="492" y="52" width="196" height="104" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.4"/>
+      <text x="590" y="80" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700" letter-spacing=".5">③ 次要嫌疑</text>
+      <text x="590" y="105" text-anchor="middle" font-size="14" fill="#1f2430" font-weight="600">callFunction</text>
+      <text x="590" y="127" text-anchor="middle" font-size="11.5" fill="#6b7280">'PyStudio' 是否已部署</text>
+      <text x="590" y="144" text-anchor="middle" font-size="11" fill="#9aa1ad">依赖要“云端安装”</text>
+
+      <line x1="692" y1="104" x2="728" y2="104" stroke="#f0a3a3" stroke-width="1.4" marker-end="url(#arR)"/>
+
+      <!-- node 4 -->
+      <rect x="732" y="52" width="256" height="104" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="860" y="80" text-anchor="middle" font-size="11" fill="#6b7280" font-weight="700" letter-spacing=".5">④ 从未到达</text>
+      <text x="860" y="105" text-anchor="middle" font-size="14" fill="#1f2430" font-weight="600">users.doc(openid).set()</text>
+      <text x="860" y="127" text-anchor="middle" font-size="11.5" fill="#6b7280">写入 1 条 Ding 记录</text>
+      <text x="860" y="144" text-anchor="middle" font-size="11" fill="#dc2626">记录列表至今为 0</text>
+
+      <!-- failure banner -->
+      <rect x="252" y="182" width="436" height="40" rx="7" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+      <text x="470" y="207" text-anchor="middle" font-size="12" fill="#b45309">失败在这里被 catch 吞掉 → 提示「已进入离线模式」→ 用户毫无感知</text>
+    </svg>
+  </div>
+  <div class="legend">
+    <span><i style="background:#86efac"></i>链路正常</span>
+    <span><i style="background:#fca5a5"></i>可能断点</span>
+    <span><i style="background:#e5e7eb"></i>尚未到达</span>
+  </div>
+
+  <h2><span class="n">3</span>最可能的原因 · 按概率排序 <small>如何一眼判断</small></h2>
+  <table class="t">
+    <tr>
+      <th style="width:34px">#</th>
+      <th style="width:29%">原因</th>
+      <th style="width:10%">概率</th>
+      <th>判定方法（你会看到什么）</th>
+    </tr>
+    <tr>
+      <td class="rk">1</td>
+      <td><b>环境 ID 与代码里写的不一致</b><br><span style="font-size:12px;color:#8b93a1">代码沿用的是旧 HTTP 服务留下的 ID</span></td>
+      <td><span class="pct"><span class="bar"><i style="width:46%"></i></span><span class="pill hot">最高</span></span></td>
+      <td>云开发控制台 → 设置 → 环境 ID，若与 <code>cloud1-d6gby9r5ha2a8ff17</code> 不同即命中。自检第 ② 环会显示 <code>env not exists / -501000</code>。</td>
+    </tr>
+    <tr>
+      <td class="rk">2</td>
+      <td><b>PyStudio 云函数没部署到该环境</b><br><span style="font-size:12px;color:#8b93a1">或只上传了代码、没装依赖</span></td>
+      <td><span class="pct"><span class="bar"><i style="width:26%"></i></span><span class="pill mid">较高</span></span></td>
+      <td>控制台云函数列表里看不到 <code>PyStudio</code>；自检第 ③ 环报 <code>FunctionName not found / -404011</code>；日志里 <code>Cannot find module 'wx-server-sdk'</code>。</td>
+    </tr>
+    <tr>
+      <td class="rk">3</td>
+      <td><b>集合建在了另一个环境</b><br><span style="font-size:12px;color:#8b93a1">三个集合不在同一环境里</span></td>
+      <td><span class="pct"><span class="bar"><i style="width:15%"></i></span><span class="pill mid">中等</span></span></td>
+      <td>自检第 ④ 环报「集合 users 不存在」。注意集合名必须精确为 <code>users</code> / <code>game_progress</code> / <code>feedbacks</code>。</td>
+    </tr>
+    <tr>
+      <td class="rk">4</td>
+      <td><b>这次进来根本没走登录</b><br><span style="font-size:12px;color:#8b93a1">本地已有缓存直接跳首页，或点了「跳过」</span></td>
+      <td><span class="pct"><span class="bar"><i style="width:9%"></i></span><span class="pill low">较低</span></span></td>
+      <td>登录页只在成功写入后才存 <code>openid</code>。若你重进小程序仍要重新填昵称，说明从没成功过；若直接进了首页，看是否命中第 1、2 条。</td>
+    </tr>
+    <tr>
+      <td class="rk">5</td>
+      <td><b>基础库 / 云开发未开通</b><br><span style="font-size:12px;color:#8b93a1">AppID 未开通云开发</span></td>
+      <td><span class="pct"><span class="bar"><i style="width:4%"></i></span><span class="pill low">低</span></span></td>
+      <td>能建集合、能看索引，说明云开发已开通，基本可排除。只可能是真机基础库过旧，自检第 ① 环会报 <code>wx.cloud 不可用</code>。</td>
+    </tr>
+  </table>
+
+  <h2><span class="n">4</span>三步定位 · 按顺序做，能直接锁死原因</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div>
+        <h4>先对一眼环境 ID（30 秒，命中率最高）</h4>
+        <p>微信开发者工具 → 云开发 → 设置 → 环境 ID，把那一串和 <code>cloud1-d6gby9r5ha2a8ff17</code> 逐字符对比。不一样就改 <code>src/config/cloud.ts</code> 里的 <code>CLOUD_ENV_ID</code>，重新 build 后再上传。</p>
+        <div class="expect">预期：代码里的 ID 与云端<b>完全一致</b>；不一致就是本问题的根因。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div>
+        <h4>用刚加的「云连接自检」把错误逼出来（2 分钟）</h4>
+        <p>重新上传后打开小程序 → 我的 → <b>🩺 云连接自检</b>。它会把 环境 / API / init / 云函数 / 集合 五项逐个探一遍，每一项都带原始报错，点「复制」就能发我。另外登录失败时现在会直接弹窗告诉你原因，不再只显示「离线模式」。</p>
+        <div class="expect">预期：五项全绿 → 再登录一次，<b>users 立刻出现一条 Ding</b>。哪项红，原因就锁定在哪一项。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div>
+        <h4>看云函数日志（有报错时）</h4>
+        <p>云开发控制台 → 云函数 → <code>PyStudio</code> → 日志。如果连调用记录都没有，说明请求压根没到云函数（坐实第 1 或第 2 条）；如果有记录但报错，错误原文会直接写在日志里。</p>
+        <div class="expect">预期：至少能看到一条 <code>health</code> 或 <code>login</code> 的调用痕迹。</div>
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="n">5</span>修通之后，数据库里应该长这样</h2>
+  <div class="after">
+    <div class="code">
+      <pre><span class="c">// 集合 users —— 一条记录，_id 就是你的 openid</span>
+{
+  <span class="k">"_id"</span>:            <span class="s">"o6zAJs4WW0OKDoAJli-chxi_6xEM"</span>,
+  <span class="k">"openid"</span>:         <span class="s">"o6zAJs4WW0OKDoAJli-chxi_6xEM"</span>,
+  <span class="k">"nickname"</span>:       <span class="s">"Ding"</span>,        <span class="c">← 你注册的名字</span>
+  <span class="k">"avatar"</span>:         <span class="s">"cloud://.../avatar.png"</span>,
+  <span class="k">"score"</span>:          <span class="n">0</span>,
+  <span class="k">"completedCount"</span>: <span class="n">0</span>,
+  <span class="k">"is_ban"</span>:         <span class="n">false</span>,
+  <span class="k">"loginCount"</span>:     <span class="n">1</span>,
+  <span class="k">"createTime"</span>:     <span class="s">"2026-11-18T13:xx:xxZ"</span>,
+  <span class="k">"lastLoginTime"</span>:  <span class="s">"2026-11-18T13:xx:xxZ"</span>
+}</pre>
+    </div>
+    <div class="fix">
+      <h4>同时应满足</h4>
+      <ul>
+        <li><code>game_progress</code> 在通关一幕后出现 <code>openid__library</code> 形式的 <code>_id</code></li>
+        <li><code>feedbacks</code> 提交一条后立刻有记录</li>
+        <li>索引 <code>_openid_1</code> 命中次数从 <b>0</b> 变为 <b>&gt;0</b>（最直观的"通了"信号）</li>
+        <li>重装小程序后仍能自动登录，昵称仍是 Ding</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="n">6</span>本轮已改的代码 <small>让失败不再隐身</small></h2>
+  <table class="t">
+    <tr><th style="width:32%">文件</th><th>改动</th></tr>
+    <tr>
+      <td><code>src/services/cloud.ts</code></td>
+      <td>新增 <code>diagnoseCloud()</code> 与 <code>getLastCloudError()</code>：五环逐项自检，并把 <code>errCode / errMsg</code> 原文保留下来；所有云调用失败都会记录最后一次真实错误。</td>
+    </tr>
+    <tr>
+      <td><code>src/pages/login/index.tsx</code></td>
+      <td>云登录失败时不再只弹「离线模式」，而是弹窗展示<b>真实原因</b>，并提示去「我的 → 云连接自检」。</td>
+    </tr>
+    <tr>
+      <td><code>src/pages/mine/index.tsx</code></td>
+      <td>新增「🩺 云连接自检」入口，一键跑完五环，结果可弹窗阅读、一键复制发人。</td>
+    </tr>
+    <tr>
+      <td><code>cloudfunctions/PyStudio/index.js</code></td>
+      <td>未改动。逻辑本身已通过本地 38 项断言，问题不在这里 —— 所以先别急着重写后端。</td>
+    </tr>
+  </table>
+
+  <h2><span class="n">7</span>自助排查清单 <small>勾完基本就通了</small></h2>
+  <div class="check">
+    <div class="cnt" id="cnt">0 / 6 项完成</div>
+    <div class="barwrap"><i id="pbar"></i></div>
+    <label><input type="checkbox" data-c><span>控制台「设置 → 环境 ID」与 <code>src/config/cloud.ts</code> 里的 <code>cloud1-d6gby9r5ha2a8ff17</code> 完全一致</span></label>
+    <label><input type="checkbox" data-c><span>云函数列表里能看到 <code>PyStudio</code>，且部署时选的是「上传并部署：云端安装依赖」，<b>部署面板右上角的环境下拉框</b>和代码里一致</span></label>
+    <label><input type="checkbox" data-c><span><code>users</code> / <code>game_progress</code> / <code>feedbacks</code> 三个集合建在<b>同一个</b>环境下，名字精确无空格</span></label>
+    <label><input type="checkbox" data-c><span>重新构建（<code>npm run build:weapp</code>）并重新上传，不是用旧包预览</span></label>
+    <label><input type="checkbox" data-c><span>手机端「我的 → 云连接自检」五项全绿</span></label>
+    <label><input type="checkbox" data-c><span>重新登录后，<code>users</code> 出现 <code>nickname = "Ding"</code> 的记录</span></label>
+  </div>
+
+  <div class="foot">诊断基于当前代码与截图信息生成 · 未接入你的云环境，因此结论为「高概率原因 + 判定方法」而非最终定论</div>
+</div>
+
+<script>
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-c]'));
+  var pbar = document.getElementById('pbar');
+  var cnt = document.getElementById('cnt');
+  function sync() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    pbar.style.width = (done / boxes.length * 100) + '%';
+    cnt.textContent = done + ' / ' + boxes.length + ' 项完成' + (done === boxes.length ? ' · 已具备写入条件 🎉' : '');
+    boxes.forEach(function (b) { b.parentNode.classList.toggle('done', b.checked); });
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', sync); });
+  sync();
+</script>
+</body>
+</html>

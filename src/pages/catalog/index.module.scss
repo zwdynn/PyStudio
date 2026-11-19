@@ -1,0 +1,225 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.header {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  padding: $spacing-xl $page-padding;
+  
+  .title {
+    display: block;
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: #fff;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .count {
+    font-size: $font-size-md;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.levelList {
+  padding: $spacing-lg $page-padding;
+}
+
+.levelItem {
+  position: relative;
+  padding-left: $spacing-lg;
+  
+  &:not(:first-child) {
+    margin-top: $spacing-xs;
+  }
+}
+
+.connectLine {
+  position: absolute;
+  left: $page-padding + $spacing-sm;
+  top: -$spacing-xs;
+  width: 4rpx;
+  height: $spacing-md;
+  
+  .line {
+    width: 100%;
+    height: 100%;
+    background: #E5E7EB;
+    border-radius: $radius-round;
+    
+    &.completed {
+      background: #10B981;
+    }
+  }
+}
+
+.levelCard {
+  background: #fff;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  display: flex;
+  align-items: center;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  transition: all $transition-base;
+  
+  &:active {
+    transform: scale(0.98);
+    box-shadow: $shadow-card-hover;
+  }
+  
+  &.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.cardLeft {
+  margin-right: $spacing-lg;
+}
+
+.iconBg {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 56rpx;
+}
+
+.completedIcon {
+  font-size: 64rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.cardRight {
+  flex: 1;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+  
+  .levelName {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-right: $spacing-md;
+  }
+  
+  .location {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    background: #F3F4F6;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+  }
+}
+
+.description {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}
+
+.progressInfo {
+  display: flex;
+  align-items: center;
+  
+  .progressBar {
+    flex: 1;
+    height: 8rpx;
+    background: #E5E7EB;
+    border-radius: $radius-round;
+    overflow: hidden;
+    margin-right: $spacing-md;
+  }
+  
+  .progressFill {
+    height: 100%;
+    border-radius: $radius-round;
+    transition: width $transition-slow;
+  }
+  
+  .progressText {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    white-space: nowrap;
+  }
+}
+
+.lockOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .lockText {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: #9CA3AF;
+  }
+}
+
+.playButton {
+  position: absolute;
+  right: $spacing-lg;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-button;
+  
+  .playText {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: #fff;
+  }
+}
+
+.replayButton {
+  position: absolute;
+  right: $spacing-lg;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-button;
+  background: #F3F4F6;
+  
+  .replayText {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+  }
+}
+
+.tipSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl $page-padding;
+  
+  .tipIcon {
+    font-size: $font-size-xl;
+    margin-right: $spacing-sm;
+  }
+  
+  .tipText {
+    font-size: $font-size-md;
+    color: $color-text-tertiary;
+  }
+}
